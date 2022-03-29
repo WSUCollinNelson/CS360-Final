@@ -1,3 +1,6 @@
+#include "cd_ls_pwd.h"
+#include "util.h"
+
 char *t1 = "xwrxwrxwr-------";
 char *t2 = "----------------";
 
@@ -5,7 +8,7 @@ char *t2 = "----------------";
 int ls_file(DIR *dp, char *buffer)
 {
   INODE *ip = &(iget(dev, dp->inode)->INODE);
-  char tempBuffer[128];
+  char tempBuffer[129];
   char nameBuffer[128];
   strncpy(nameBuffer, dp->name, dp->name_len);
   nameBuffer[dp->name_len] = 0;
@@ -54,7 +57,7 @@ int ls_file(DIR *dp, char *buffer)
   { 
     char linknameBuffer[256];
     ssize_t linkname = readlink(nameBuffer, linknameBuffer, 256); // use readlink() to read linkname 
-    sprintf(tempBuffer, "-> %s", linkname); // print linked name 
+    sprintf(tempBuffer, "-> %ld", linkname); // print linked name 
     strcat(buffer, tempBuffer);
   } 
 
@@ -118,7 +121,7 @@ int cd()
   if(strcmp(pathname, "") == 0)
   {
     running->cwd = root;
-    return;
+    return 0;
   }
 
   // search for mip
@@ -154,7 +157,7 @@ char *pwd(int start , MINODE* wd)
     else{
       printf("/");
     }
-    return;
+    return 0;
   }
   else {
     MINODE* parent = iget(dev, search(wd, ".."));
