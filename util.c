@@ -3,7 +3,7 @@
 #include "type.h"
 #include "util.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 /**** globals defined in main.c file ****/
 extern MINODE minode[NMINODE];
@@ -101,26 +101,34 @@ MINODE *iget(int dev, int ino)
 
 void iput(MINODE *mip)
 {
- int i, block, offset;
- char buf[BLKSIZE];
- INODE *ip;
+   int i, block, offset;
+   char buf[BLKSIZE];
+   INODE *ip;
 
- if (mip==0) 
-     return;
+   if (mip==0) 
+      return;
 
- mip->refCount--;
+   mip->refCount--;
  
- if (mip->refCount > 0) return;
- if (!mip->dirty)       return;
+   if (mip->refCount > 0) return;
+   if (!mip->dirty)       return;
  
- /* write INODE back to disk */
- /**************** NOTE ******************************
-  For mountroot, we never MODIFY any loaded INODE
+   /* write INODE back to disk */
+   /**************** NOTE ******************************
+      For mountroot, we never MODIFY any loaded INODE
                  so no need to write it back
-  FOR LATER WROK: MUST write INODE back to disk if refCount==0 && DIRTY
+   FOR LATER WROK: MUST write INODE back to disk if refCount==0 && DIRTY
 
-  Write YOUR code here to write INODE back to disk
- *****************************************************/
+   Write YOUR code here to write INODE back to disk
+   *****************************************************/
+   // get INODE of ino to buf    
+   block = (ino-1)/8 + iblk;
+   offset = (ino-1) % 8;
+
+   get_block(dev, block, buf);
+   ip = (INODE *)buf + offset;
+   *ip = mip->INODE;
+   put_block(dev, block, buf);
 } 
 
 int search(MINODE *mip, char *name)
@@ -287,4 +295,30 @@ int findino(MINODE *mip, u32 *myino) // myino = i# of . return i# of ..
      dp = (DIR *)cp;
    }
    return 0;
+}
+
+int enter_name(MINODE *mip, int ino, char *name)
+{
+   get_block(dev, mip->INODE.i_block[0], buf);
+   DIR *dp = (DIR *)buf;
+   char *cp = buf;
+
+   if(DEBUG) printf("Fetched dir block...\n");
+
+   while (cp < buf + BLKSIZE){
+      if(DEBUG) printf("scanning ino %d\n", dp->inode);
+      cp += dp->rec_len;
+      dp = (DIR *)cp;
+   }
+
+   if(DEBUG) printf("Found empty entry\n");
+
+   dp->inode = ino;
+   strcpy(dp->name, name);
+   dp->name[strlen(name)] = 0;
+   dp->name_len = strlen(name);
+   dp->file_type = 'r';
+   dp->rec_len = sizeof(DIR) + strlen(name) - 1;
+
+   return 1;
 }

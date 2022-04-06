@@ -4,21 +4,7 @@
 #include "header.h"
 #include "type.h"
 
-#define DEBUG 0
-
 extern MINODE *iget();
-
-MINODE minode[NMINODE];
-MINODE *root;
-PROC   proc[NPROC], *running;
-
-char gpath[128]; // global for tokenized components
-char *name[64];  // assume at most 64 components in pathname
-int   n;         // number of component strings
-
-int fd, dev;
-int nblocks, ninodes, bmap, imap, iblk;
-char line[128], cmd[32], pathname[128];
 
 #include "cd_ls_pwd.c"
 
@@ -99,7 +85,7 @@ int main(int argc, char *argv[ ])
   // WRTIE code here to create P1 as a USER process
   
   while(1){
-    printf("input command : [ls|cd|pwd|quit] ");
+    printf("input command : [ls|cd|pwd|link|quit] ");
     fgets(line, 128, stdin);
     line[strlen(line)-1] = 0;
 
@@ -107,8 +93,8 @@ int main(int argc, char *argv[ ])
        continue;
     pathname[0] = 0;
 
-    sscanf(line, "%s %s", cmd, pathname);
-    if(DEBUG) printf("cmd=%s pathname=%s\n", cmd, pathname);
+    sscanf(line, "%s %s %s", cmd, pathname, pathname2);
+    if(DEBUG) printf("cmd=%s pathname=%s pathname2=%s\n", cmd, pathname, pathname2);
   
     if (strcmp(cmd, "ls")==0)
        ls();
@@ -116,6 +102,8 @@ int main(int argc, char *argv[ ])
        cd();
     else if (strcmp(cmd, "pwd")==0)
        pwd(1, running->cwd);
+    else if (strcmp(cmd, "link") == 0)
+      my_link();
     else if (strcmp(cmd, "quit")==0)
        quit();
   }
