@@ -29,8 +29,8 @@ int my_link()
 
     omip->INODE.i_links_count++;
     omip->dirty = 1;
-    iput(omip);
-    iput(pmip);
+    //iput(omip);
+    //iput(pmip);
 
     return 1;
 }

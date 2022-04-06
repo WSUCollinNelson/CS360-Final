@@ -3,7 +3,7 @@
 #include "type.h"
 #include "util.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 /**** globals defined in main.c file ****/
 extern MINODE minode[NMINODE];
@@ -122,13 +122,13 @@ void iput(MINODE *mip)
    Write YOUR code here to write INODE back to disk
    *****************************************************/
    // get INODE of ino to buf    
-   block = (ino-1)/8 + iblk;
+   /*block = (ino-1)/8 + iblk;
    offset = (ino-1) % 8;
 
    get_block(dev, block, buf);
    ip = (INODE *)buf + offset;
    *ip = mip->INODE;
-   put_block(dev, block, buf);
+   put_block(dev, block, buf);*/
 } 
 
 int search(MINODE *mip, char *name)
@@ -305,20 +305,28 @@ int enter_name(MINODE *mip, int ino, char *name)
 
    if(DEBUG) printf("Fetched dir block...\n");
 
-   while (cp < buf + BLKSIZE){
-      if(DEBUG) printf("scanning ino %d\n", dp->inode);
+   while (cp + dp->rec_len < buf + BLKSIZE){
+      if(DEBUG) printf("scanning ino %d, reclen = %d\n", dp->inode, dp->rec_len);
       cp += dp->rec_len;
       dp = (DIR *)cp;
    }
 
    if(DEBUG) printf("Found empty entry\n");
 
+   int oldRecLength = dp->rec_len;
+   dp->rec_len = sizeof(DIR) + dp->name_len - 1;
+   int newRecLength = dp->rec_len;
+   cp += dp->rec_len;
+   dp = (DIR *)cp;
+
    dp->inode = ino;
    strcpy(dp->name, name);
    dp->name[strlen(name)] = 0;
    dp->name_len = strlen(name);
    dp->file_type = 'r';
-   dp->rec_len = sizeof(DIR) + strlen(name) - 1;
+   dp->rec_len = oldRecLength - newRecLength;
+
+   put_block(dev, mip->INODE.i_block[0], buf);
 
    return 1;
 }
