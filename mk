@@ -1,5 +1,2 @@
 rm a.out 2> /dev/null
-
-gcc main.c util.c
-
-./mkdisk
+gcc main.c util.c alloc.c
