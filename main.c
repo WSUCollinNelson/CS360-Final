@@ -110,6 +110,10 @@ int main(int argc, char *argv[ ])
       my_unlink();
     else if(strcmp(cmd, "readlink") == 0)
       my_readlink();
+    else if(strcmp(cmd, "creat") == 0)
+      my_creat();
+    else if (strcmp(cmd, "symlink") == 0)
+      my_symlink();
   }
 }
 

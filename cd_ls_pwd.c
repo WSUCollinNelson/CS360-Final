@@ -57,7 +57,7 @@ int ls_file(DIR *dp, char *buffer)
   { 
     char linknameBuffer[60];
     ssize_t linkname = my_readlink(nameBuffer, linknameBuffer); // use my_readlink() to read linkname 
-    sprintf(tempBuffer, "-> %ld", linkname); // print linked name 
+    sprintf(tempBuffer, "-> %s", linknameBuffer); // print linked name 
     strcat(buffer, tempBuffer);
   } 
 

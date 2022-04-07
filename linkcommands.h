@@ -12,9 +12,12 @@
 
 #include "util.h"
 #include "header.h"
+#include "alloc.h"
 
-char parent[128], child[64];
+char parent[128], child[64], child2[64];
 
 int my_link();
 int my_unlink();
 int my_readlink();
+int my_creat();
+int my_symlink();
