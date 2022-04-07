@@ -10,6 +10,7 @@ extern MINODE *iget();
 
 #include "cd_ls_pwd.c"
 #include "dir_commands.c"
+#include "minor_commands.c"
 
 int init()
 {
@@ -107,7 +108,15 @@ int main(int argc, char *argv[ ])
        pwd(1, running->cwd);
     else if (strcmp(cmd, "mkdir") == 0)
     {
-      imkdir(pathname);
+      imkdir();
+    }
+    else if (strcmp(cmd, "rmdir") == 0)
+    {
+      irmdir();
+    }
+    else if (strcmp(cmd, "stat") == 0)
+    {
+      my_stat();
     }
     else if (strcmp(cmd, "quit")==0)
        quit();

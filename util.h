@@ -24,3 +24,4 @@ int findmyname(MINODE *parent, u32 myino, char myname[ ]) ;
 int traverse(MINODE* source, char *pathname);
 int findino(MINODE *mip, u32 *myino);
 int enter_name(MINODE* pmip, int ino, char* basename, int isDir);
+int rm_name(MINODE *mip, int ino, char *name);

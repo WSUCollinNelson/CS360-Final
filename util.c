@@ -344,3 +344,50 @@ int enter_name(MINODE *mip, int ino, char *name, int isDir)
 
    return 1;
 }
+
+int rm_name(MINODE *mip, int ino, char *name)
+{
+   get_block(dev, mip->INODE.i_block[0], buf);
+   DIR *dp = (DIR *)buf;
+   char *cp = buf;
+   DIR *lastdp;
+   int deletedLength;
+
+   char newBuf[BLKSIZE];
+   char *newcp = newBuf;
+
+   if(DEBUG) printf("Fetched dir block...\n");
+
+   int foundTarget = 0;
+   if (DEBUG) printf("Looking for inode = %d name = %s\n", ino, name);
+   while (cp + dp->rec_len < buf + BLKSIZE){
+      if(DEBUG) printf("scanning ino %d, reclen = %d\n", dp->inode, dp->rec_len);
+
+      if(dp->inode == ino && strncmp(dp->name, name, dp->name_len) == 0){
+         deletedLength = dp->rec_len;
+         if (DEBUG) printf("Deleted %d bytes partway.\n", deletedLength);
+      }
+      else
+      {
+         lastdp = (DIR*)newcp;
+         memcpy(newcp, cp, dp->rec_len);
+         newcp += dp->rec_len;
+      }
+
+      cp += dp->rec_len;
+      dp = (DIR *)cp;
+   }
+
+   if(strncmp(dp->name, name, dp->name_len) == 0)
+   {
+      lastdp->rec_len += dp->rec_len+1;
+      if (DEBUG) printf("Deleted node at end\n");
+   }
+   else
+   {
+      memcpy(newcp, cp, dp->rec_len);
+      ((DIR*)newcp)->rec_len += deletedLength;
+   }
+
+   put_block(dev, mip->INODE.i_block[0], newBuf);
+}

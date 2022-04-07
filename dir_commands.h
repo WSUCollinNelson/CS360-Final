@@ -9,12 +9,15 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#include "util.h"
+
 char parent[128], child[64];
 
-int pino;
+int pino, ino;
 MINODE* pmip;
+MINODE* mip;
+char nodeName[128];
 
-int my_mkdir();
-int kmkdir(MINODE* pmip, char* basename);
 int imkdir();
 int ikmkdir(MINODE* pmip, char* basename);
+int irmdir();
