@@ -8,6 +8,8 @@
 #include <sys/stat.h>
 #include <time.h>
 
+char *t1 = "xwrxwrxwr-------";
+char *t2 = "----------------";
 
 int ls_file(DIR *dp, char *buffer);
 int ls_dir(MINODE *mip);
