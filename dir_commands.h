@@ -11,5 +11,10 @@
 
 char parent[128], child[64];
 
+int pino;
+MINODE* pmip;
+
 int my_mkdir();
 int kmkdir(MINODE* pmip, char* basename);
+int imkdir();
+int ikmkdir(MINODE* pmip, char* basename);

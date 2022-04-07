@@ -107,7 +107,7 @@ int main(int argc, char *argv[ ])
        pwd(1, running->cwd);
     else if (strcmp(cmd, "mkdir") == 0)
     {
-      my_mkdir(pathname);
+      imkdir(pathname);
     }
     else if (strcmp(cmd, "quit")==0)
        quit();
