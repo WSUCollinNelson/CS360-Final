@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#include "linkcommands.h"
 
 int ls_file(DIR *dp, char *buffer);
 int ls_dir(MINODE *mip);

@@ -16,3 +16,5 @@
 char parent[128], child[64];
 
 int my_link();
+int my_unlink();
+int my_readlink();
