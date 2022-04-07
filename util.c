@@ -101,26 +101,33 @@ MINODE *iget(int dev, int ino)
 
 void iput(MINODE *mip)
 {
- int i, block, offset;
- char buf[BLKSIZE];
- INODE *ip;
+   int i, block, offset;
+   char buf[BLKSIZE];
+   INODE *ip;
 
- if (mip==0) 
-     return;
+   if (mip==0) 
+      return;
 
- mip->refCount--;
- 
- if (mip->refCount > 0) return;
- if (!mip->dirty)       return;
- 
- /* write INODE back to disk */
- /**************** NOTE ******************************
-  For mountroot, we never MODIFY any loaded INODE
-                 so no need to write it back
-  FOR LATER WROK: MUST write INODE back to disk if refCount==0 && DIRTY
+   mip->refCount--;
+   
+   if (mip->refCount > 0) return;
+   if (!mip->dirty)       return;
+   
+   /* write INODE back to disk */
+   /**************** NOTE ******************************
+    For mountroot, we never MODIFY any loaded INODE
+                  so no need to write it back
+   FOR LATER WROK: MUST write INODE back to disk if refCount==0 && DIRTY
 
-  Write YOUR code here to write INODE back to disk
- *****************************************************/
+   Write YOUR code here to write INODE back to disk
+   *****************************************************/
+   block = (mip->ino-1)/8 +iblk;
+   offset = (mip->ino-1)% 8;
+
+   get_block(dev, block, buf);
+   ip = (INODE *)buf + offset;
+   *ip = mip->INODE;
+   put_block(dev, block, buf);
 } 
 
 int search(MINODE *mip, char *name)
@@ -289,7 +296,7 @@ int findino(MINODE *mip, u32 *myino) // myino = i# of . return i# of ..
    return 0;
 }
 
-int enter_name(MINODE *mip, int ino, char *name)
+int enter_name(MINODE *mip, int ino, char *name, int isDir)
 {
    get_block(dev, mip->INODE.i_block[0], buf);
    DIR *dp = (DIR *)buf;
@@ -304,7 +311,7 @@ int enter_name(MINODE *mip, int ino, char *name)
       strcpy(dp->name, name);
       dp->name[strlen(name)] = 0;
       dp->name_len = strlen(name);
-      dp->file_type = 'r';
+      dp->file_type = isDir? 'd' : 'r';
       dp->rec_len = BLKSIZE;
 
       put_block(dev, mip->INODE.i_block[0], buf);
@@ -330,7 +337,7 @@ int enter_name(MINODE *mip, int ino, char *name)
    strcpy(dp->name, name);
    dp->name[strlen(name)] = 0;
    dp->name_len = strlen(name);
-   dp->file_type = 'r';
+   dp->file_type = isDir? 'd' : 'r';
    dp->rec_len = oldRecLength - newRecLength;
 
    put_block(dev, mip->INODE.i_block[0], buf);

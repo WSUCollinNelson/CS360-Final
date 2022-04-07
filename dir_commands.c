@@ -4,6 +4,8 @@
 
 int my_mkdir()
 {
+    char pname[128];
+
     // tokenize
     printf("before tokenize\n");
     tokenize(pathname);
@@ -13,38 +15,67 @@ int my_mkdir()
     MINODE* pmip;
     int pino;
 
-    printf("before checking each directory\n");
-    for (int i = 0; i < n -1; i++)
+    if (n == 1)
     {
-        pino = getino(name[i]);
-        pmip = iget(dev, pino);
-
-        printf("checking %s: %d for being a dir \n", name[i], pino);
-
-        if ((pmip->INODE.i_mode & 0xF000) != 0x4000) 
-        {
-            printf("%s is not a directory\n", name[i]);
-            return 0;
-        }
+        strcpy(parent, ".");
+        strcpy(child, name[0]);
+        strcpy(pname, "./"); 
+        strcpy(pname, pathname);
+        n++;
     }
+    else
+    {
+        strcpy(parent, name[n-2]);
+        strcpy(child, name[n-1]);
+        strcpy(pname, pathname);
+    }
+
+    printf("parent: %s child: %s\n", parent, child);
+
+    printf("before checking each directory\n");
+    //for (int i = 0; i < n -2; i++)
+    //{
+    //    pino = getino(name[i]);
+    //    pmip = iget(dev, pino);
+
+    //    printf("checking %s: %d for being a dir \n", name[i], pino);
+
+    //    if ((pmip->INODE.i_mode & 0xF000) != 0x4000) 
+    //    {
+    //        printf("%s is not a directory\n", name[i]);
+    //        return 0;
+    //    }
+    //}
+
+    pino = getino(parent);
+    pmip = iget(dev, pino);
+
+    printf("checking %s: %d for being a dir \n", parent, pino);
+
+    if ((pmip->INODE.i_mode & 0xF000) != 0x4000) 
+    {
+        printf("%s is not a directory\n", parent);
+        return 0;
+    }
+
     printf("after checking each directory\n");
 
     // verify base name isn't in parent Dir 
     // search (pmip, bsename) == 0
 
-    printf("before searching for %s in parent dir\n", name[n-1]);
-    if (getino(pathname) != 0) 
+    printf("before searching for %s in parent dir\n", child);
+    if (getino(pname) != 0) 
     {
-        printf("%s already exists in %s\n", name[n -1], name[n-2]);
+        printf("%s already exists in %s\n", child, parent);
         return 0;
     }
-    printf("after searching for %s in parent dir\n", name[n-1]);
+    printf("after searching for %s in parent dir\n", child);
     // create a dir, call kmkdir
     printf("before kmkdir\n");
-    kmkdir(pmip, pino, name[n-1]);
+    kmkdir(pmip, child);
 }
 
-int kmkdir(MINODE* pmip, int pino, char* basename)
+int kmkdir(MINODE* pmip, char* basename)
 {
     // Allocate an INODE and disk block
     printf("before ialloc\n");
@@ -95,10 +126,10 @@ int kmkdir(MINODE* pmip, int pino, char* basename)
     // make data block 0 of INODE contain . and ..
 
     printf("before enter_name for ino\n");
-    enter_name(mip, ino, ".");
+    enter_name(mip, ino, ".", 1);
     printf("before enter_name for pino\n");
-    enter_name(mip, pmip->ino, "..");
+    enter_name(mip, pmip->ino, "..", 1);
     // sets parent's child to this inode
     printf("before enter_name for new node\n");
-    enter_name(pmip, ino, name[n-1]);
+    enter_name(pmip, ino, child, 1);
 }

@@ -9,5 +9,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
+char parent[128], child[64];
+
 int my_mkdir();
-int kmkdir(MINODE* pmip, int pino, char* basename);
+int kmkdir(MINODE* pmip, char* basename);
