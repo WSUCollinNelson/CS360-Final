@@ -97,7 +97,7 @@ int main(int argc, char *argv[ ])
        continue;
     pathname[0] = 0;
 
-    sscanf(line, "%s %s", cmd, pathname);
+    sscanf(line, "%s %s %s", cmd, pathname, pathname2);
     if(DEBUG) printf("cmd=%s pathname=%s\n", cmd, pathname);
   
     if (strcmp(cmd, "ls")==0)
@@ -117,6 +117,14 @@ int main(int argc, char *argv[ ])
     else if (strcmp(cmd, "stat") == 0)
     {
       my_stat();
+    }
+    else if (strcmp(cmd, "chmod") == 0)
+    {
+      my_chmod(pathname, pathname2);
+    }
+    else if(strcmp(cmd, "utime") == 0)
+    {
+      my_utime();
     }
     else if (strcmp(cmd, "quit")==0)
        quit();

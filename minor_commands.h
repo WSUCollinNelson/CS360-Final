@@ -12,5 +12,5 @@
 #include "type.h"
 
 int my_stat();
-int my_chmod();
+int my_chmod(char* pathname, char* pathname2);
 int my_utime();
