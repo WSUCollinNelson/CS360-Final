@@ -18,3 +18,8 @@ int decFreeInodes(int dev);
 int ialloc(int dev);  // allocate an inode number from inode_bitmap
 int set_bit(char *buf, int bit);
 int tst_bit(char *buf, int bit);
+int clr_bit(char *buf, int bit);
+int balloc(int dev);
+int incFreeInodes(int dev);
+int idalloc(int dev, int ino);
+int bdalloc(int dev, int ino);
