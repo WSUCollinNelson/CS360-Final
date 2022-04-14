@@ -10,6 +10,7 @@
 #include <time.h>
 
 #include "util.h"
+#include "alloc.h"
 
 char parent[128], child[64];
 

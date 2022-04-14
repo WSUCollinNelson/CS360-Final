@@ -10,6 +10,10 @@
 #include <time.h>
 
 #include "linkcommands.h"
+#include "type.h"
+#include "cd_ls_pwd.h"
+#include "minor_commands.h"
+#include "dir_commands.h"
 
 #define DEBUG 0
 

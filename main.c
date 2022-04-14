@@ -2,11 +2,8 @@
 *                   KCW: mount root file system                             *
 *****************************************************************************/
 #include "header.h"
-#include "type.h"
 
 extern MINODE *iget();
-
-#include "cd_ls_pwd.c"
 
 int init()
 {
@@ -114,6 +111,16 @@ int main(int argc, char *argv[ ])
       my_creat();
     else if (strcmp(cmd, "symlink") == 0)
       my_symlink();
+    else if (strcmp(cmd, "mkdir") == 0)
+      imkdir();
+    else if (strcmp(cmd, "rmdir") == 0)
+      irmdir();
+    else if (strcmp(cmd, "stat") == 0)
+      my_stat();
+    else if (strcmp(cmd, "chmod") == 0)
+      my_chmod(pathname, pathname2);
+    else if(strcmp(cmd, "utime") == 0)
+      my_utime();
   }
 }
 

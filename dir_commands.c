@@ -1,6 +1,4 @@
-#include "util.h"
 #include "dir_commands.h"
-#include "alloc.h"
 
 int imkdir()
 {

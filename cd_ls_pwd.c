@@ -1,5 +1,4 @@
 #include "cd_ls_pwd.h"
-#include "util.h"
 
 char *t1 = "xwrxwrxwr-------";
 char *t2 = "----------------";
