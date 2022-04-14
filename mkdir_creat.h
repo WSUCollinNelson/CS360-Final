@@ -10,7 +10,7 @@
 #include <time.h>
 
 #include "util.h"
-#include "alloc.h"
+#include "alloc_dalloc.h"
 
 char parent[128], child[64];
 
@@ -21,4 +21,5 @@ char nodeName[128];
 
 int imkdir();
 int ikmkdir(MINODE* pmip, char* basename);
-int irmdir();
+int enter_name(MINODE *mip, int ino, char *name, int isDir);
+int my_creat();

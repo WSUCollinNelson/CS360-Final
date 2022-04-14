@@ -9,11 +9,8 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#include "link_unlink.h"
 #include "util.h"
+#include "alloc_dalloc.h"
 
-int ls_file(DIR *dp, char *buffer);
-int ls_dir(MINODE *mip);
-int ls();
-int cd();
-char *pwd(int start , MINODE* wd);
+int irmdir();
+int rm_name(MINODE *mip, int ino, char *name);

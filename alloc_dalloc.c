@@ -1,4 +1,4 @@
-#include "alloc.h"
+#include "alloc_dalloc.h"
 
 int decFreeInodes(int dev)
 {
