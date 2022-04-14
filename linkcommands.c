@@ -24,7 +24,7 @@ int my_link()
     MINODE *pmip = iget(dev, pino);
     if(DEBUG) printf("Entering name\n");
 
-    enter_name(pmip, oino, child);
+    enter_name(pmip, oino, child, 0);
     if(DEBUG) printf("Entered new DIR\n");
 
     omip->INODE.i_links_count++;
@@ -122,7 +122,7 @@ int my_creat()
     iput(mip);
 
     //Add new inode to parent
-    enter_name(pmip, ino, child);
+    enter_name(pmip, ino, child, 0);
     pmip->dirty = 1;
     iput(pmip);
 }
@@ -168,7 +168,7 @@ int my_symlink()
     iput(mip);
 
     //Add new inode to parent
-    enter_name(pmip, ino, child);
+    enter_name(pmip, ino, child, 0);
     pmip->dirty = 1;
     iput(pmip);
     return 0;
