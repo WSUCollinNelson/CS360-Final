@@ -9,6 +9,11 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "type.h"
+#include "header.h"
+
+char buf[BLKSIZE];
+
 int get_block(int dev, int blk, char *buf);
 int put_block(int dev, int blk, char *buf);
 int tokenize(char *pathname);

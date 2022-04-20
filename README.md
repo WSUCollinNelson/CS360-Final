@@ -1,25 +1,16 @@
-# cs360-lab6-template
+# cs360-finalProject-template
+Student: Collin Nelson  
+Student: Anna Ueti
 
-Follow KC's write up of the assignment here: https://eecs.wsu.edu/~cs360/mountroot.html
+## Requirements:
+- Add your names to this file.
+- Ensure your code can be ran with a `mk` script. 
+- include a working diskimage in your submission.
 
-Please ensure your code can be compiled with an `mk` script. We haven't provided one for this lab so you will need to write it yourself.
-
-## Advice for final project:
-- Find a solid partner. K.C has in the Project Specification page that partners are allows. Use GitHub to manage your shared codebase. 
-- You're going to be working with this codebase until the end of the semester. The most valuable thing you can do rn before the codebase gets too large is refactor KC's provided code into something that compiles without warnings. Our suggestion is to use header files and preprocessor statements (i.e #ifndef HEADER_H #define HEADER_H #endif).
-- come up with a mneumonic for all the variables KC gives you (mip, pip, ip etc...). 
-- Check the GNU EXT2 documentation for stuff KC's book doesn't cover well. 
-- Write documentation/comments in your code, especially in KC's provided code. 
-- Search your errors in the discord channel; someone probably ran into it before. 
-
-## To Turn In:
-Push your files to GitHub Classroom (see [here](https://eecs.wsu.edu/~cs360/ta_resources/howto-linux-cmds.html) for more details if you do not know how to submit using Git/GitHub Classroom).
-
-Note you must `git push` your code to submit it. Submissions automatically occur based on the last pushed commit whenever the assignment is due.
-
-## Autotests
-No autotest for this lab.
-
-## Samples
-As usual, samples may be found at https://eecs.wsu.edu/~cs360/samples/MOUNTROOT/. You may download them via the `wget` utility (see the [How-To Linux Command page](https://eecs.wsu.edu/~cs360/ta_resources/howto-linux-cmds.html) on the course webpage if you are unfamiliar).
+## Details:
+- All final project submissions will be done in this project. Submit Level one, two and three here on their respective due dates.
+    - We will clone them at the normal submission time. 
+- Demo will be a litte different, join the zoom call and be prepared to share your screen and run your code. 
+- Sign up (individuals AND partners) at this google sheet link. We will be making the demo schedule Wednesday at 5p. 
+    - https://docs.google.com/spreadsheets/d/1YDyWAbeTQYjvdJ4y-827NOEqvoHtWIJmwT1fuYInFiE/edit?usp=sharingss
 

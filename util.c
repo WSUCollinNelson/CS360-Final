@@ -1,9 +1,5 @@
 /*********** util.c file ****************/
-
-#include "type.h"
 #include "util.h"
-
-#define DEBUG 0
 
 /**** globals defined in main.c file ****/
 extern MINODE minode[NMINODE];
@@ -101,26 +97,34 @@ MINODE *iget(int dev, int ino)
 
 void iput(MINODE *mip)
 {
- int i, block, offset;
- char buf[BLKSIZE];
- INODE *ip;
+   int i, block, offset;
+   char buf[BLKSIZE];
+   INODE *ip;
 
- if (mip==0) 
-     return;
+   if (mip==0) 
+      return;
 
- mip->refCount--;
+   mip->refCount--;
  
- if (mip->refCount > 0) return;
- if (!mip->dirty)       return;
+   if (mip->refCount > 0) return;
+   if (!mip->dirty)       return;
  
- /* write INODE back to disk */
- /**************** NOTE ******************************
-  For mountroot, we never MODIFY any loaded INODE
+   /* write INODE back to disk */
+   /**************** NOTE ******************************
+      For mountroot, we never MODIFY any loaded INODE
                  so no need to write it back
-  FOR LATER WROK: MUST write INODE back to disk if refCount==0 && DIRTY
+   FOR LATER WROK: MUST write INODE back to disk if refCount==0 && DIRTY
 
-  Write YOUR code here to write INODE back to disk
- *****************************************************/
+   Write YOUR code here to write INODE back to disk
+   *****************************************************/
+   // get INODE of ino to buf    
+   block = (mip->ino-1)/8 + iblk;
+   offset = (mip->ino-1) % 8;
+
+   get_block(dev, block, buf);
+   ip = (INODE *)buf + offset;
+   *ip = mip->INODE;
+   put_block(dev, block, buf);
 } 
 
 int search(MINODE *mip, char *name)

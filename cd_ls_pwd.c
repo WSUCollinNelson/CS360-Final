@@ -1,5 +1,4 @@
 #include "cd_ls_pwd.h"
-#include "util.h"
 
 char *t1 = "xwrxwrxwr-------";
 char *t2 = "----------------";
@@ -55,9 +54,9 @@ int ls_file(DIR *dp, char *buffer)
   // print -> linkname if symbolic file 
   if ((ip->i_mode & 0xF000)== 0xA000)
   { 
-    char linknameBuffer[256];
-    ssize_t linkname = readlink(nameBuffer, linknameBuffer, 256); // use readlink() to read linkname 
-    sprintf(tempBuffer, "-> %ld", linkname); // print linked name 
+    char linknameBuffer[60];
+    ssize_t linkname = my_readlink(nameBuffer, linknameBuffer); // use my_readlink() to read linkname 
+    sprintf(tempBuffer, "-> %s", linknameBuffer); // print linked name 
     strcat(buffer, tempBuffer);
   } 
 
