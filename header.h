@@ -19,7 +19,7 @@
 #include "open_close.h"
 #include "read_cat.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 MINODE minode[NMINODE];
 MINODE *root;

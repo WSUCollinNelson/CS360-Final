@@ -112,20 +112,8 @@ int main(int argc, char *argv[ ])
       int file = my_open_file(pathname, 1);
       printf("Opened fd %d: mode = %d\n", file, running->fd[file]->mode);
     }
-    else if (strcmp(cmd, "read") == 0)
-    {
-      char buf[128];
-      int file = my_open_file(pathname, 0);
-
-      myread(file, buf, 128);
-      buf[127] = 0;
-      printf("Reading file: %s\n", buf);
-      printf("------------------------------\n");
-      myread(file, ssbuf, 2500);
-      ssbuf[2499] = 0;
-      printf("Reading file: %s\n", ssbuf);
-      printf("------------------------------\n");
-    }
+    else if (strcmp(cmd, "cat") == 0)
+      mycat(pathname);
     else if(strcmp(cmd, "creat") == 0)
       my_creat();
     else if (strcmp(cmd, "symlink") == 0)

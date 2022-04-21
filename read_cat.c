@@ -1,8 +1,26 @@
 #include "read_cat.h"
 
-int read_file()
+int mycat(char* filename)
 {
+    int file = my_open_file(pathname, 0);
+    char mybuf[1024];  
+    int n;
+    int mode = proc[0].fd[file]->mode;
 
+    if ( mode == 0 || mode == 2)
+    {
+        while(n = myread(file, mybuf, 1024))
+        {
+            mybuf[n] = 0;
+            printf("%s", mybuf);
+        } 
+        printf("\n");
+    }
+    else
+    {
+        printf("Incorrect file mode: %d\n", mode);
+    }
+    //close(file);
 }
 
 int myread(int fd, char *buf, int nbytes)
