@@ -292,3 +292,26 @@ int findino(MINODE *mip, u32 *myino) // myino = i# of . return i# of ..
    }
    return 0;
 }
+
+int get_logical_block(MINODE *mip, int lblock)
+{
+   if(lblock < 12) {
+      return mip->INODE.i_block[lblock];
+   }
+   else if(lblock < 12 + 256) {
+      int buf[256];
+      if(mip->INODE.i_block[12] == 0) return 0;
+      get_block(dev, mip->INODE.i_block[12],(char*) buf);
+      return  buf[lblock - 12];
+   }
+   else if(lblock < 12 + 256 + (256 * 256))
+   {
+      int buf[256];
+      if(mip->INODE.i_block[13] == 0) return 0;
+      get_block(dev, mip->INODE.i_block[13], (char*) buf);
+      if(buf[(lblock - 12 - 256) / 256] == 0) return 0;
+      int index = buf[(lblock - 12 - 256) / 256];
+      get_block(dev, index, (char*) buf);
+      return buf[(lblock - 12 - 256) % 256];
+   }
+}

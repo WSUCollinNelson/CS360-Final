@@ -16,6 +16,8 @@
 #include "mkdir_creat.h"
 #include "rmdir.h"
 #include "symlink.h"
+#include "open_close.h"
+#include "read_cat.h"
 
 #define DEBUG 0
 

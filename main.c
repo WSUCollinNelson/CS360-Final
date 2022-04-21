@@ -105,8 +105,18 @@ int main(int argc, char *argv[ ])
        quit();
     else if(strcmp(cmd, "unlink") == 0)
       my_unlink();
-    else if(strcmp(cmd, "readlink") == 0)
-      my_readlink();
+    else if(strcmp(cmd, "open") == 0)
+    {
+      int file = my_open_file(pathname, 1);
+      printf("Opened fd %d: mode = %d\n", file, running->fd[file]->mode);
+    }
+    else if (strcmp(cmd, "read") == 0)
+    {
+      char buf[128];
+      myread(my_open_file(pathname, 1), buf, 128);
+      buf[127] = 0;
+      printf("Reading file: %s\n", buf);
+    }
     else if(strcmp(cmd, "creat") == 0)
       my_creat();
     else if (strcmp(cmd, "symlink") == 0)

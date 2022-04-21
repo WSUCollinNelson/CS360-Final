@@ -1,49 +1,50 @@
 #include "read_cat.h"
 
+int read_file()
+{
+
+}
+
 int myread(int fd, char *buf, int nbytes)
 {
-    int count = 0;
-    int avil = fileSize - OFT; //'s offset // number of bytes still available in file.
+    OFT *oftp = proc[0].fd[fd];
+    int avil = oftp->minodePtr->INODE.i_size - oftp->offset; //'s offset // number of bytes still available in file.
     char *cq = buf;                // cq points at buf[ ]
 
-    while (nbytes && avil){
+    int index = 0;
+    int blk = -1;
 
-       //Compute LOGICAL BLOCK number lbk and startByte in that block from offset;
+    char bbuf[BLKSIZE];
 
-        lbk = oftp->offset / BLKSIZE;
-        startByte = oftp->offset % BLKSIZE;
-     
-       // I only show how to read DIRECT BLOCKS. YOU do INDIRECT and D_INDIRECT
- 
-       if (lbk < 12){                     // lbk is a direct block
-           blk = mip->INODE.i_block[lbk]; // map LOGICAL lbk to PHYSICAL blk
-       }
-       else if (lbk >= 12 && lbk < 256 + 12) { 
-            //  indirect blocks 
-       }
-       else{ 
-            //  double indirect blocks
-       } 
+    //I believe in you
+    while(blk != 0 && avil != 0)
+    {
+        if (DEBUG)
+            printf("Before getting lblk\n");
+        int blk = get_logical_block(oftp->minodePtr, index);
+        if (DEBUG)
+            printf("Before getting blk: avail- %d\n", avil);
+        get_block(dev, blk, bbuf);
 
-       /* get the data block into readbuf[BLKSIZE] */
-       get_block(mip->dev, blk, readbuf);
+        if(avil >= BLKSIZE)
+        {
+            if (DEBUG)
+                printf("in 1st case\n");
+            memcpy(buf, bbuf, BLKSIZE);
+            buf += BLKSIZE;
+            avil -= BLKSIZE;
+            index++;
+        }
+        else 
+        {
+            memcpy(buf, bbuf, avil);
+            avil = 0;
 
-       /* copy from startByte to buf[ ], at most remain bytes in this block */
-       char *cp = readbuf + startByte;   
-       int remain = BLKSIZE - startByte;   // number of bytes remain in readbuf[]
-
-       while (remain > 0){
-            *cq++ = *cp++;             // copy byte from readbuf[] into buf[]
-             oftp->offset++;           // advance offset 
-             count++;                  // inc count as number of bytes read
-             avil--; nbytes--;  remain--;
-             if (nbytes <= 0 || avil <= 0) 
-                 break;
-       }
- 
-       // if one data block is not enough, loop back to OUTER while for more ...
-
-   }
-   printf("myread: read %d char from file descriptor %d\n", count, fd);  
-   return count;   // count is the actual number of bytes read
+            if (DEBUG)
+                printf("in second case: bbuf - %s blk- %d avil- %d buf- %s\n", bbuf, blk, avil, buf);
+        }
+    }
+    //
+   printf("myread: read %d char from file descriptor %d\n", index, fd);  
+   return index;   // count is the actual number of bytes read
 }

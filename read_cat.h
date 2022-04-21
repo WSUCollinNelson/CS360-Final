@@ -8,3 +8,9 @@
 #include <libgen.h>
 #include <sys/stat.h>
 #include <time.h>
+
+#include "type.h"
+#include "util.h"
+
+int read_file();
+int myread(int fd, char *buf, int nbytes);
