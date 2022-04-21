@@ -11,7 +11,7 @@ int my_open_file(char *filePath, int mode)
     }
 
     for (int i = 0; i < NFD; i++){
-        if (running->fd[i] != 0 && running->fd[i]->minodePtr == mip && running->fd[i]->mode != 'R'){
+        if (running->fd[i] != 0 && running->fd[i]->minodePtr == mip && running->fd[i]->mode != 0){
             printf("File is currently open in an incompatible mode.\n");
             return -1;
         }

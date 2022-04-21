@@ -5,6 +5,8 @@
 
 extern MINODE *iget();
 
+char ssbuf[2500];
+
 int init()
 {
   int i, j;
@@ -113,9 +115,16 @@ int main(int argc, char *argv[ ])
     else if (strcmp(cmd, "read") == 0)
     {
       char buf[128];
-      myread(my_open_file(pathname, 1), buf, 128);
+      int file = my_open_file(pathname, 0);
+
+      myread(file, buf, 128);
       buf[127] = 0;
       printf("Reading file: %s\n", buf);
+      printf("------------------------------\n");
+      myread(file, ssbuf, 2500);
+      ssbuf[2499] = 0;
+      printf("Reading file: %s\n", ssbuf);
+      printf("------------------------------\n");
     }
     else if(strcmp(cmd, "creat") == 0)
       my_creat();

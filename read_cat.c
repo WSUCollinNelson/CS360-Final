@@ -9,42 +9,55 @@ int myread(int fd, char *buf, int nbytes)
 {
     OFT *oftp = proc[0].fd[fd];
     int avil = oftp->minodePtr->INODE.i_size - oftp->offset; //'s offset // number of bytes still available in file.
-    char *cq = buf;                // cq points at buf[ ]
+    int lblk = oftp->offset / BLKSIZE;               // cq points at buf[ ]
+    int start = oftp->offset % BLKSIZE;
+    int remaining = nbytes < avil ? nbytes : avil;
+    if (DEBUG) printf("avil: %d reamining: %d\n", avil, remaining);
 
-    int index = 0;
+    int bytesRead = remaining;
     int blk = -1;
 
     char bbuf[BLKSIZE];
 
-    //I believe in you
-    while(blk != 0 && avil != 0)
+    blk = get_logical_block(oftp->minodePtr, lblk);
+    if (DEBUG) printf("\n -------New Block------- \n");
+    get_block(dev, blk, bbuf);
+
+    if(BLKSIZE - start >= remaining)
     {
-        if (DEBUG)
-            printf("Before getting lblk\n");
-        int blk = get_logical_block(oftp->minodePtr, index);
-        if (DEBUG)
-            printf("Before getting blk: avail- %d\n", avil);
+        memcpy(buf, bbuf, remaining);
+        remaining = 0;
+    }
+    else
+    {
+        memcpy(buf, bbuf + start, BLKSIZE - start);
+        remaining -= (BLKSIZE - start);
+        buf += (BLKSIZE - start);
+    }
+
+    //I believe in you
+    while(remaining > 0)
+    {
+        lblk++;
+        blk = get_logical_block(oftp->minodePtr, lblk);
+        if (DEBUG) printf("\n -------New Block------- \n");
         get_block(dev, blk, bbuf);
 
-        if(avil >= BLKSIZE)
+        if(remaining >= BLKSIZE)
         {
-            if (DEBUG)
-                printf("in 1st case\n");
+            if (DEBUG) printf("in 1st case\n");
             memcpy(buf, bbuf, BLKSIZE);
             buf += BLKSIZE;
-            avil -= BLKSIZE;
-            index++;
+            remaining -= BLKSIZE;
         }
         else 
         {
-            memcpy(buf, bbuf, avil);
-            avil = 0;
-
-            if (DEBUG)
-                printf("in second case: bbuf - %s blk- %d avil- %d buf- %s\n", bbuf, blk, avil, buf);
+            memcpy(buf, bbuf, remaining);
+            remaining = 0;
         }
     }
-    //
-   printf("myread: read %d char from file descriptor %d\n", index, fd);  
-   return index;   // count is the actual number of bytes read
+
+    oftp->offset += bytesRead;
+    return bytesRead;
+    // return index;   // count is the actual number of bytes read
 }
