@@ -22,4 +22,6 @@ int clr_bit(char *buf, int bit);
 int balloc(int dev);
 int incFreeInodes(int dev);
 int idalloc(int dev, int ino);
-int bdalloc(int dev, int ino);
+int bdalloc(int dev, int bno);
+int incFreeBlocks(int dev);
+int decFreeBlocks(int dev);

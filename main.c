@@ -5,8 +5,6 @@
 
 extern MINODE *iget();
 
-char ssbuf[2500];
-
 int init()
 {
   int i, j;
@@ -107,15 +105,10 @@ int main(int argc, char *argv[ ])
        quit();
     else if(strcmp(cmd, "unlink") == 0)
       my_unlink();
-    else if(strcmp(cmd, "open") == 0)
-    {
-      int file = my_open_file(pathname, 1);
-      printf("Opened fd %d: mode = %d\n", file, running->fd[file]->mode);
-    }
-    else if (strcmp(cmd, "cat") == 0)
-      mycat(pathname);
+    else if(strcmp(cmd, "cp") == 0)
+      my_cp();
     else if(strcmp(cmd, "creat") == 0)
-      my_creat();
+      my_creat(pathname);
     else if (strcmp(cmd, "symlink") == 0)
       my_symlink();
     else if (strcmp(cmd, "mkdir") == 0)
@@ -128,6 +121,10 @@ int main(int argc, char *argv[ ])
       my_chmod(pathname, pathname2);
     else if(strcmp(cmd, "utime") == 0)
       my_utime();
+    else if(strcmp(cmd, "cat") == 0)
+      mycat(pathname);
+    else if(strcmp(cmd, "pfd") == 0)
+      pfd();
   }
 }
 

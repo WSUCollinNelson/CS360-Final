@@ -32,8 +32,10 @@ int my_open_file(char *filePath, int mode)
             freeOft->offset = 0;
             break;
         case 1:
+            if (DEBUG) printf("Truncating...\n");
             my_truncate(mip);
             freeOft->offset = 0;
+            if (DEBUG) printf("Done truncating.\n");
             break;
         case 2:
             freeOft->offset = 0;
@@ -68,5 +70,42 @@ int my_open_file(char *filePath, int mode)
 
 int my_truncate(MINODE *mip)
 {
-    //Stub
+    int lblock;
+    int blk;
+    while(blk = get_logical_block(mip, lblock++)) {
+        bdalloc(dev, blk);
+    }
+    for (int i = 0; i < 14; i++) {
+        mip->INODE.i_block[i] = 0;
+    }
+    mip->INODE.i_size = 0;
+}
+
+int my_close_file(int file) 
+{
+    if(file < 0 || file > 63 || running->fd[file] == 0) {
+        printf("File descriptor not valid.\n");
+        return 0;
+    }
+
+    OFT *oftp = running->fd[file];
+    running->fd[file] = 0;
+    oftp->refCount--;
+    if(oftp->refCount == 0) return 0;
+
+    iput(oftp->minodePtr);
+    return 0;
+}
+
+int pfd() 
+{
+    printf(" fd     mode    offset      INODE  \n");
+    printf("----    ----    ------    ---------\n");
+    for(int i = 0; i < NFD; i++){
+        if(running->fd[i] != 0) {
+            OFT *oftp = running->fd[i];
+            printf(" %2d       %d     %6d    [%d, %d]\n", i, oftp->mode, oftp->offset, dev, oftp->minodePtr->ino);
+        }
+    }
+    printf("----------------------------------\n");
 }

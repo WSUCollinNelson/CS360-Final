@@ -14,6 +14,20 @@ int decFreeInodes(int dev)
   put_block(dev, 2, buf);
 }
 
+int decFreeBlocks(int dev)
+{
+  // dec free inodes count in SUPER and GD
+  get_block(dev, 1, buf);
+  SUPER *sp = (SUPER *)buf;
+  sp->s_free_blocks_count--;
+  put_block(dev, 1, buf);
+
+  get_block(dev, 2, buf);
+  GD *gp = (GD *)buf;
+  gp->bg_free_blocks_count--;
+  put_block(dev, 2, buf);
+}
+
 int ialloc(int dev)  // allocate an inode number from inode_bitmap
 {
   int  i;
@@ -66,8 +80,6 @@ int balloc(int dev)
 {
     int  i;
     char buf[BLKSIZE];
-
-    // MTABLE *mp = (MTABLE *)get_mtable(dev);
     
     // read inode_bitmap block
     get_block(dev, bmap, buf);
@@ -79,9 +91,9 @@ int balloc(int dev)
           set_bit(buf, i);
           put_block(dev, bmap, buf);
 
-          //decFreeInodes(dev);
+          decFreeBlocks(dev);
 
-          printf("allocated block = %d\n", i+1); // bits count from 0; ino from 1
+          if (DEBUG) printf("allocated block = %d\n", i+1); // bits count from 0; ino from 1
           return i+1;
       }
     }
@@ -125,7 +137,39 @@ int idalloc(int dev, int ino)
   incFreeInodes(dev);
 }
 
-int bdalloc(int dev, int ino)
+int bdalloc(int dev, int bno)
 {
-  printf("To Be Implemented\n");
+  int i;  
+  char buf[BLKSIZE];
+
+  if (bno > nblocks){
+    printf("block number %d out of range\n", ino);
+    return -1;
+  }
+
+  // get inode bitmap block
+  get_block(dev, bmap, buf);
+  clr_bit(buf, bno-1);
+
+  // write buf back
+  put_block(dev, bmap, buf);
+
+  // update free inode count in SUPER and GD
+  incFreeBlocks(dev);
+}
+
+int incFreeBlocks(int dev)
+{
+  char buf[BLKSIZE];
+
+  // inc free inodes count in SUPER and GD
+  get_block(dev, 1, buf);
+  sp = (SUPER *)buf;
+  sp->s_free_blocks_count++;
+  put_block(dev, 1, buf);
+
+  get_block(dev, 2, buf);
+  gp = (GD *)buf;
+  gp->bg_free_blocks_count++;
+  put_block(dev, 2, buf);
 }

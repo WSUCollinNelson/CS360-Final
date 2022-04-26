@@ -22,4 +22,4 @@ char nodeName[128];
 int imkdir();
 int ikmkdir(MINODE* pmip, char* basename);
 int enter_name(MINODE *mip, int ino, char *name, int isDir);
-int my_creat();
+int my_creat(char * pathname);

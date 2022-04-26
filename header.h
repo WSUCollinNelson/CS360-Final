@@ -17,7 +17,7 @@
 #include "rmdir.h"
 #include "symlink.h"
 #include "open_close.h"
-#include "read_cat.h"
+#include "write_cp.h"
 
 #define DEBUG 0
 

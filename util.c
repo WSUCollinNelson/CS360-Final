@@ -301,17 +301,48 @@ int get_logical_block(MINODE *mip, int lblock)
    else if(lblock < 12 + 256) {
       int buf[256];
       if(mip->INODE.i_block[12] == 0) return 0;
-      get_block(dev, mip->INODE.i_block[12],(char*) buf);
+      get_block(dev, mip->INODE.i_block[12], (char *)buf);
       return  buf[lblock - 12];
    }
    else if(lblock < 12 + 256 + (256 * 256))
    {
       int buf[256];
       if(mip->INODE.i_block[13] == 0) return 0;
-      get_block(dev, mip->INODE.i_block[13], (char*) buf);
+      get_block(dev, mip->INODE.i_block[13], (char *)buf);
       if(buf[(lblock - 12 - 256) / 256] == 0) return 0;
       int index = buf[(lblock - 12 - 256) / 256];
-      get_block(dev, index, (char*) buf);
+      get_block(dev, index, (char *)buf);
       return buf[(lblock - 12 - 256) % 256];
    }
+}
+
+int set_logical_block(MINODE *mip, int lblock, int value)
+{
+   if(lblock < 12) {
+      mip->INODE.i_block[lblock] = value;
+      if(DEBUG) printf("placed new block %d into direct block %d\n", value, lblock); 
+   }
+   else if(lblock < 12 + 256) {
+      int buf[256];
+      if(mip->INODE.i_block[12] == 0) mip->INODE.i_block[12] = balloc(dev);
+      get_block(dev, mip->INODE.i_block[12], (char *)buf);
+      buf[lblock - 12] = value;
+      put_block(dev, mip->INODE.i_block[12], (char *)buf);
+      if (DEBUG) printf("placed new indirect block\n"); 
+   }
+   else if(lblock < 12 + 256 + (256 * 256))
+   {
+      int buf[256];
+      if(mip->INODE.i_block[13] == 0) mip->INODE.i_block[13] = balloc(dev);
+      get_block(dev, mip->INODE.i_block[13], (char *)buf);
+      if(buf[(lblock - 12 - 256) / 256] == 0) buf[(lblock - 12 - 256) / 256] = balloc(dev);
+      put_block(dev, mip->INODE.i_block[13], (char *)buf);
+      int index = buf[(lblock - 12 - 256) / 256];
+      get_block(dev, index, (char *)buf);
+      buf[(lblock - 12 - 256) % 256] = value;
+      put_block(dev, index, (char *)buf);
+      if(DEBUG) printf("placed new double indirect block\n"); 
+   }
+   mip->dirty = 1;
+   iput(mip);
 }

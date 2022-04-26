@@ -20,7 +20,7 @@ int mycat(char* filename)
     {
         printf("Incorrect file mode: %d\n", mode);
     }
-    //close(file);
+    my_close_file(file);
 }
 
 int myread(int fd, char *buf, int nbytes)
@@ -76,6 +76,5 @@ int myread(int fd, char *buf, int nbytes)
     }
 
     oftp->offset += bytesRead;
-    return bytesRead;
-    // return index;   // count is the actual number of bytes read
+    return bytesRead; // count is the actual number of bytes read
 }

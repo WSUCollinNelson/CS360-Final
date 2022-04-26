@@ -44,7 +44,7 @@ int ikmkdir(MINODE* pmip, char* basename)
     ip->i_links_count = 2; // links count=2 because of . and ..
     ip->i_atime = ip->i_ctime = ip->i_mtime = time(0L);
     ip->i_blocks = 2; // LINUX: Blocks count in 512 byte chunks
-    ip->i_block[0] = ino; // new DIR has one data block
+    ip->i_block[0] = blk; // new DIR has one data block
 
     for(int i = 1; i < 14; i++ )
     {
@@ -114,7 +114,7 @@ int enter_name(MINODE *mip, int ino, char *name, int isDir)
    return 1;
 }
 
-int my_creat()
+int my_creat(char *pathname)
 {
     strcpy(child, basename(pathname));
     strcpy(parent, dirname(pathname));
