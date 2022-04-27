@@ -2,16 +2,16 @@
 
 int imkdir()
 {
+    if (!(my_access(pathname, 0) && my_access(pathname, 1) && my_access(pathname, 2)))
+    { 
+        printf("Incorrect permissions\n");
+        return 0;
+    }
+
     strcpy(child, basename(pathname));
     strcpy(parent, dirname(pathname));
 
     printf("Dirname: %s Basename: %s\n", parent, child);
-
-    if (!(my_access(parent, 0) && my_access(parent, 1) && my_access(parent, 2)))
-    { 
-        if(DEBUG) { printf("Incorrect permissions\n");} 
-        return 0;
-    }
 
     pino = getino(parent);
     pmip= iget(dev, pino);
@@ -122,14 +122,14 @@ int enter_name(MINODE *mip, int ino, char *name, int isDir)
 
 int my_creat(char *pathname)
 {
-    strcpy(child, basename(pathname));
-    strcpy(parent, dirname(pathname));
-
-    if (!(my_access(parent, 0) && my_access(parent, 1) && my_access(parent, 2)))
+    if (!(my_access(pathname, 0) && my_access(pathname, 1) && my_access(pathname, 2)))
     { 
-        if(DEBUG) { printf("Incorrect permissions\n");} 
+        printf("Incorrect permissions\n"); 
         return 0;
     }
+
+    strcpy(child, basename(pathname));
+    strcpy(parent, dirname(pathname));
 
     int pino = getino(parent);
     MINODE *pmip = iget(dev, pino);

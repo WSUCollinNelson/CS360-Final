@@ -2,6 +2,12 @@
 
 int my_link()
 {
+    if (!(my_access(pathname, 0) && my_access(pathname, 1) && my_access(pathname, 2)))
+    { 
+        printf("Incorrect permissions\n");
+        return 0;
+    }
+
     int oino = getino(pathname);
     if (DEBUG) printf("INO = %d\n", oino);
     MINODE *omip = iget(dev, oino);
@@ -20,6 +26,13 @@ int my_link()
 
     strcpy(child, basename(pathname2));
     strcpy(parent, dirname(pathname2));
+
+    if (!(my_access(parent, 0) && my_access(parent, 1) && my_access(parent, 2)))
+    { 
+        if(DEBUG) { printf("Incorrect permissions\n");} 
+        return 0;
+    }
+
     int pino = getino(parent);
     MINODE *pmip = iget(dev, pino);
     if(DEBUG) printf("Entering name\n");
@@ -37,6 +50,12 @@ int my_link()
 
 int my_unlink()
 {
+    if (!(isOwner(pathname)))
+    { 
+        printf("Incorrect permissions - not file owner\n");
+        return 0;
+    }
+
     int ino = getino(pathname);
     MINODE *mip = iget(dev, ino);
 

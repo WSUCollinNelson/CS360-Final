@@ -27,4 +27,5 @@ int findino(MINODE *mip, u32 *myino);
 int get_logical_block(MINODE *mip, int lblock);
 int set_logical_block(MINODE *mip, int lblock, int value);
 int my_access(char *filename, int mode);
+int my_mip_access(MINODE* mip, int mode);
 int isOwner(char *filename);

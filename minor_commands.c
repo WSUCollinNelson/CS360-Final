@@ -85,17 +85,17 @@ int my_chmod(char* mode, char* pathname2)
             if (mode[index] == 'x')
             {
                 printf("Adding Executable Permissions ...\n");
-                mip->INODE.i_mode |= S_IEXEC;
+                mip->INODE.i_mode |= (S_IEXEC | S_IXGRP | S_IXOTH);
             }
             else if(mode[index] == 'r')
             {
                 printf("Adding Reading Permissions ...\n");
-                mip->INODE.i_mode |= S_IREAD;
+                mip->INODE.i_mode |= (S_IREAD | S_IRGRP | S_IROTH);
             }
             else if(mode[index] == 'w')
             {
                 printf("Adding Writing Permissions ...\n");
-                mip->INODE.i_mode |= S_IWRITE;
+                mip->INODE.i_mode |= (S_IWRITE | S_IWGRP | S_IWOTH);
             }
 
             index++;
@@ -110,17 +110,17 @@ int my_chmod(char* mode, char* pathname2)
             if (mode[index] == 'x')
             {
                 printf("Removing Executable Permissions ...\n");
-                mip->INODE.i_mode &= ~(S_IEXEC);
+                mip->INODE.i_mode &= ~(S_IEXEC | S_IXGRP | S_IXOTH);
             }
             else if(mode[index] == 'r')
             {
                 printf("Removing Reading Permissions ...\n");
-                mip->INODE.i_mode &= ~(S_IREAD);
+                mip->INODE.i_mode &= ~(S_IREAD | S_IRGRP | S_IROTH);
             }
             else if(mode[index] == 'w')
             {
                 printf("Removing Writing Permissions ...\n");
-                mip->INODE.i_mode &= ~(S_IWRITE);
+                mip->INODE.i_mode &= ~(S_IWRITE | S_IWGRP | S_IWOTH);
             }
 
             index++;

@@ -70,6 +70,12 @@ int ls_file(DIR *dp, char *buffer)
 
 int ls_dir(MINODE *mip)
 {
+  if (!(my_mip_access(mip, 0) && my_mip_access(mip, 2)))
+  { 
+      printf("Incorrect permissions\n");
+      return 0;
+  }
+
   char buf[BLKSIZE], temp[256];
   DIR *dp;
   char *cp;
@@ -88,12 +94,6 @@ int ls_dir(MINODE *mip)
 
 int ls()
 {
-  if (!(my_access(pathname, 0) && my_access(pathname, 2)))
-  { 
-      if(DEBUG) { printf("Incorrect permissions\n");} 
-      return 0;
-  }
-
   if(strcmp(pathname, "") == 0){
     ls_dir(running->cwd);
   }
@@ -125,7 +125,7 @@ int cd()
 {
   if (!(my_access(pathname, 0) && my_access(pathname, 2)))
   { 
-      if(DEBUG) { printf("Incorrect permissions\n");} 
+      printf("Incorrect permissions\n");
       return 0;
   }
 
@@ -160,9 +160,9 @@ int cd()
 
 char *pwd(int start , MINODE* wd)
 {
-  if (!(my_access(wd, 0) && my_access(wd, 2)))
+  if (!(my_mip_access(wd, 0) && my_mip_access(wd, 2)))
   { 
-      if(DEBUG) { printf("Incorrect permissions\n");} 
+      printf("Incorrect permissions\n");
       return 0;
   }
 

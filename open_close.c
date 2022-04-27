@@ -2,6 +2,42 @@
 
 int my_open_file(char *filePath, int mode)
 {
+    switch(mode)
+    {
+        // read
+        case 0:
+            if (!(my_access(filePath, 0) && my_access(filePath, 2)))
+            { 
+                printf("Incorrect permissions\n");
+                return 0;
+            }
+            break;
+        // write
+        case 1:
+            if (!(my_access(filePath, 1) && my_access(filePath, 2)))
+            { 
+                printf("Incorrect permissions\n");
+                return 0;
+            }
+            break;
+        // read write
+        case 2:
+            if (!(my_access(filePath, 0) && my_access(filePath, 1) && my_access(filePath, 2)))
+            { 
+                printf("Incorrect permissions\n");
+                return 0;
+            }
+            break;
+        // append aka write
+        case 3:
+            if (!(my_access(filePath, 1) && my_access(filePath, 2)))
+            { 
+                printf("Incorrect permissions\n");
+                return 0;
+            }
+            break;
+    }
+
     int ino = getino(filePath);
     MINODE *mip = iget(dev, ino);
 

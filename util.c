@@ -192,6 +192,12 @@ int getino(char *pathname)
       printf("getino: i=%d name[%d]=%s\n", i, i, name[i]);
       }
 
+      if (!(my_mip_access(mip, 0) && my_mip_access(mip, 2)))
+      { 
+         if(DEBUG) { printf("Incorrect permissions - r = %d and x = %d\n", my_mip_access(mip, 0), my_mip_access(mip, 2));} 
+         return 0;
+      }
+
       ino = search(mip, name[i]);
 
       if (ino==0){
@@ -367,6 +373,26 @@ int my_access(char *filename, int mode)  // mode = r|w|x:
   else
       r = mip->INODE.i_mode & otherP[mode];//(check other's rwx with mode);  // by tst_bit()
 
+  iput(mip);
+  
+  return r;
+}
+
+int my_mip_access(MINODE* mip, int mode)  // mode = r|w|x:
+{
+  int r;
+
+  if (running->uid == 0)   // SUPERuser always OK
+     return 1;
+
+  // NOT SUPERuser: get file's INODE
+
+  if (mip->INODE.i_uid == running->uid)
+      r = mip->INODE.i_mode & ownerP[mode]; //(check owner's rwx with mode);  // by tst_bit()
+  else
+  {
+      r = mip->INODE.i_mode & otherP[mode]; //(check other's rwx with mode);  // by tst_bit()
+  }
   iput(mip);
   
   return r;

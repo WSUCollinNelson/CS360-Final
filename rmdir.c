@@ -6,9 +6,9 @@ int irmdir()
     strcpy(child, basename(pathname));
     strcpy(parent, dirname(pathname));
 
-    if (!(isOwner(parent)))
+    if (!(isOwner(pathname)))
    { 
-      if(DEBUG) { printf("Incorrect permissions\n");} 
+      printf("Incorrect permissions - not directory owner\n");
       return 0;
    }
 
