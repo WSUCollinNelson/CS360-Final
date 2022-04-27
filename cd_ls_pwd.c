@@ -70,7 +70,7 @@ int ls_file(DIR *dp, char *buffer)
 
 int ls_dir(MINODE *mip)
 {
-  if (!(my_mip_access(mip, 0) && my_mip_access(mip, 2)))
+  if (!(my_mip_access(mip, 2)))
   { 
       printf("Incorrect permissions\n");
       return 0;
@@ -123,7 +123,7 @@ int ls()
 /************* cd_ls_pwd.c file **************/
 int cd()
 {
-  if (!(my_access(pathname, 0) && my_access(pathname, 2)))
+  if (!(my_access(pathname, 2)))
   { 
       printf("Incorrect permissions\n");
       return 0;

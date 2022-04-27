@@ -192,7 +192,7 @@ int getino(char *pathname)
       printf("getino: i=%d name[%d]=%s\n", i, i, name[i]);
       }
 
-      if (!(my_mip_access(mip, 0) && my_mip_access(mip, 2)))
+      if (!(my_mip_access(mip, 2)))
       { 
          if(DEBUG) { printf("Incorrect permissions - r = %d and x = %d\n", my_mip_access(mip, 0), my_mip_access(mip, 2));} 
          return 0;
