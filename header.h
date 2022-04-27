@@ -19,7 +19,7 @@
 #include "open_close.h"
 #include "write_cp.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 MINODE minode[NMINODE];
 MINODE *root;

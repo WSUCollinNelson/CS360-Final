@@ -13,6 +13,10 @@ extern int n;
 extern int fd, dev;
 extern int nblocks, ninodes, bmap, imap, iblk;
 
+int ownerP[3] = {0x0100, 0x0080, 0x0040};
+
+int otherP[3] = {0x0010, 0x0008, 0x0004};
+
 extern char line[128], cmd[32], pathname[128];
 
 int get_block(int dev, int blk, char *buf)
@@ -346,3 +350,32 @@ int set_logical_block(MINODE *mip, int lblock, int value)
    mip->dirty = 1;
    iput(mip);
 }
+
+int my_access(char *filename, int mode)  // mode = r|w|x:
+{
+  int r;
+
+  if (running->uid == 0)   // SUPERuser always OK
+     return 1;
+
+  // NOT SUPERuser: get file's INODE
+  ino = getino(filename);
+  mip = iget(dev, ino);
+
+  if (mip->INODE.i_uid == running->uid)
+      r = mip->INODE.i_mode & ownerP[mode]; //(check owner's rwx with mode);  // by tst_bit()
+  else
+      r = mip->INODE.i_mode & otherP[mode];//(check other's rwx with mode);  // by tst_bit()
+
+  iput(mip);
+  
+  return r;
+}
+
+int isOwner(char *filename)
+{
+   ino = getino(filename);
+   mip = iget(dev, ino);
+
+   return mip->INODE.i_uid == running->uid;
+} 

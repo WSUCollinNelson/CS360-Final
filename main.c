@@ -24,7 +24,7 @@ int init()
     p = &proc[i];
     p->pid = i;
     p->uid = p->gid = 0;
-    p->cwd = 0;
+    p->cwd = iget(dev, 2);
   }
 }
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[ ])
   running->cwd = iget(dev, 2);
   printf("root refCount = %d\n", root->refCount);
 
-  // WRTIE code here to create P1 as a USER process
+  proc[1].uid = 1;
   
   while(1){
     printf("input command : ");
@@ -125,6 +125,8 @@ int main(int argc, char *argv[ ])
       mycat(pathname);
     else if(strcmp(cmd, "pfd") == 0)
       pfd();
+    else if(strcmp(cmd, "su") == 0)
+      running = (running == &proc[0]) ? &proc[1] : &proc[0];
   }
 }
 

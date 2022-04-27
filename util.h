@@ -26,3 +26,5 @@ int traverse(MINODE* source, char *pathname);
 int findino(MINODE *mip, u32 *myino);
 int get_logical_block(MINODE *mip, int lblock);
 int set_logical_block(MINODE *mip, int lblock, int value);
+int my_access(char *filename, int mode);
+int isOwner(char *filename);

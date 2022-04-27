@@ -6,6 +6,12 @@ int irmdir()
     strcpy(child, basename(pathname));
     strcpy(parent, dirname(pathname));
 
+    if (!(isOwner(parent)))
+   { 
+      if(DEBUG) { printf("Incorrect permissions\n");} 
+      return 0;
+   }
+
     mip= iget(dev, ino);
 
     printf("ino: %d mip->ino: %d\n", ino, mip->ino);
